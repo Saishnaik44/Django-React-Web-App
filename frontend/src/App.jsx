@@ -10,7 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 function Logout() {
   localStorage.clear()
   return <Navigate to="/login" />
-}queueMicrotask
+}
 
 function RegisterAndLogout() {
   localStorage.clear()
