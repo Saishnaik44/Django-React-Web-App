@@ -25,15 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3@!8nf8m)tq8=_(yqq_hklg14%k9ub=feff8)&v+r_5*g$!7p-'
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-3@!8nf8m)tq8=_(yqq_hklg14%k9ub=feff8)&v+r_5*g$!7p-")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "django-react-full-stack-app-vbt2.onrender.com",
+    ".onrender.com",  # wildcard for any Render subdomain
 ]
     
 
@@ -69,6 +70,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files in production
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -148,13 +150,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS - allow requests from the Vercel frontend
+CORS_ALLOWED_ORIGINS = [
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+]
 CORS_ALLOW_CREDENTIALS = True
