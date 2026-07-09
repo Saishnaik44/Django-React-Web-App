@@ -36,7 +36,12 @@ ALLOWED_HOSTS = [
     "django-react-full-stack-app-vbt2.onrender.com",
     ".onrender.com",  # wildcard for any Render subdomain
 ]
-    
+
+# Add Render external hostname if it exists
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 
 
 REST_FRAMEWORK = {
@@ -163,3 +168,8 @@ CORS_ALLOWED_ORIGINS = [
     os.getenv("FRONTEND_URL", "http://localhost:5173"),
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF - trust requests from the Vercel frontend
+CSRF_TRUSTED_ORIGINS = [
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+]
